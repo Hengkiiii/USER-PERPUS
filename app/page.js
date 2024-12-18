@@ -10,7 +10,6 @@ export default function LoginPage() {
           <img src="/icon.png" alt="Login Illustration" className="w-3/4" />
         </div>
 
-        {/* Right Side - Form */}
         <div className="w-1/2 p-8">
           <Typography
             variant="h4"

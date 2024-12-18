@@ -1,21 +1,40 @@
-"use client";
+
+'use client';
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import Typography from "@mui/material/Typography";
-import { FaSearch, FaCalendarAlt, FaBookOpen } from "react-icons/fa";
+import { FaBookOpen, FaArrowLeft } from "react-icons/fa";
 
 const PengembalianBuku = () => {
-  const [returnDate, setReturnDate] = useState("");
-  const [condition, setCondition] = useState("");
-  const [quantity, setQuantity] = useState(1);
+  const [formData, setFormData] = useState({
+    bookName: "",
+    description: "",
+    borrowedDate: "",
+    dueDate: "",
+    quantity: 1,
+  });
+  const router = useRouter();
 
-  const handleSearch = () => {
-    console.log("Sedang mencari buku untuk dikembalikan...");
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleReturn = () => {
-    console.log(`Buku dikembalikan tanggal: ${returnDate}`);
-    console.log(`Kondisi buku: ${condition}`);
-    console.log(`Jumlah buku: ${quantity}`);
+    console.log("Proses pengembalian buku:");
+    console.log(formData);
+    console.log("Buku berhasil dikembalikan.");
+    setFormData({
+      bookName: "",
+      description: "",
+      borrowedDate: "",
+      dueDate: "",
+      quantity: 1,
+    });
+  };
+
+  const handleBack = () => {
+    router.push("/beranda");
   };
 
   return (
@@ -26,97 +45,91 @@ const PengembalianBuku = () => {
             Pengembalian Buku
           </Typography>
           <Typography variant="body2" align="center" className="mt-2">
-            Kelola pengembalian buku dengan mudah dan cepat
+            Lengkapi detail buku untuk proses pengembalian
           </Typography>
         </div>
         <div className="p-8 space-y-6">
-          <div>
-            <Typography
-              variant="body1"
-              component="label"
-              htmlFor="search"
-              className="text-teal-700"
-            >
-              Cari Buku
-            </Typography>
-            <div className="flex mt-2 items-center">
-              <input
-                id="search"
-                type="text"
-                className="w-full border rounded-l-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-teal-600"
-                placeholder="Masukkan judul atau pengarang buku"
-              />
-              <button
-                className="bg-teal-600 text-white px-4 py-2 rounded-r-lg hover:bg-teal-700 transition duration-200 flex items-center"
-                onClick={handleSearch}
-              >
-                <FaSearch className="mr-2" />
-                Cari
-              </button>
-            </div>
-          </div>
-          <div>
-            <Typography
-              variant="h6"
-              className="text-teal-700 font-semibold mb-2"
-            >
-              Detail Buku
-            </Typography>
-            <div className="border rounded-lg p-4 bg-gray-50 shadow-sm">
-              <Typography variant="body1" className="mb-2">
-                <span className="font-medium">Judul:</span> Buku Contoh
-              </Typography>
-              <Typography variant="body1" className="mb-2">
-                <span className="font-medium">Pengarang:</span> Nama Pengarang
-              </Typography>
-              <Typography variant="body1" className="mb-2">
-                <span className="font-medium">Tahun Terbit:</span> 2023
-              </Typography>
-              <Typography variant="body1" className="mb-2">
-                <span className="font-medium">Stok:</span> 5 Buku
-              </Typography>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form className="space-y-4">
             <div>
               <Typography
                 variant="body1"
                 component="label"
-                htmlFor="returnDate"
+                htmlFor="bookName"
                 className="text-teal-700"
               >
-                Tanggal Pengembalian
+                Nama Buku
               </Typography>
-              <div className="relative mt-1">
-                <FaCalendarAlt className="absolute top-3 left-3 text-teal-600" />
+              <input
+                id="bookName"
+                name="bookName"
+                type="text"
+                className="w-full border rounded-lg py-2 px-4 mt-2 focus:outline-none focus:ring-2 focus:ring-teal-600"
+                placeholder="Masukkan nama buku"
+                value={formData.bookName}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div>
+              <Typography
+                variant="body1"
+                component="label"
+                htmlFor="description"
+                className="text-teal-700"
+              >
+                Deskripsi
+              </Typography>
+              <textarea
+                id="description"
+                name="description"
+                rows="3"
+                className="w-full border rounded-lg py-2 px-4 mt-2 focus:outline-none focus:ring-2 focus:ring-teal-600"
+                placeholder="Masukkan deskripsi buku"
+                value={formData.description}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="flex space-x-4">
+              <div className="flex-1">
+                <Typography
+                  variant="body1"
+                  component="label"
+                  htmlFor="borrowedDate"
+                  className="text-teal-700"
+                >
+                  Tanggal Peminjaman
+                </Typography>
                 <input
-                  id="returnDate"
+                  id="borrowedDate"
+                  name="borrowedDate"
                   type="date"
-                  className="w-full border rounded-lg py-2 pl-10 px-4 focus:outline-none focus:ring-2 focus:ring-teal-600"
-                  value={returnDate}
-                  onChange={(e) => setReturnDate(e.target.value)}
+                  className="w-full border rounded-lg py-2 px-4 mt-2 focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  value={formData.borrowedDate}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+              <div className="flex-1">
+                <Typography
+                  variant="body1"
+                  component="label"
+                  htmlFor="dueDate"
+                  className="text-teal-700"
+                >
+                  Tanggal Pengembalian
+                </Typography>
+                <input
+                  id="dueDate"
+                  name="dueDate"
+                  type="date"
+                  className="w-full border rounded-lg py-2 px-4 mt-2 focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  value={formData.dueDate}
+                  onChange={handleInputChange}
                 />
               </div>
             </div>
-            <div>
-              <Typography
-                variant="body1"
-                component="label"
-                htmlFor="condition"
-                className="text-teal-700"
-              >
-                Kondisi Buku
-              </Typography>
-              <input
-                id="condition"
-                type="text"
-                className="w-full border rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-teal-600"
-                placeholder="Masukkan kondisi buku (contoh: Baik)"
-                value={condition}
-                onChange={(e) => setCondition(e.target.value)}
-              />
-            </div>
+
             <div>
               <Typography
                 variant="body1"
@@ -128,16 +141,25 @@ const PengembalianBuku = () => {
               </Typography>
               <input
                 id="quantity"
+                name="quantity"
                 type="number"
-                className="w-full border rounded-lg py-2 px-4 focus:outline-none focus:ring-2 focus:ring-teal-600"
-                placeholder="Masukkan jumlah buku"
-                value={quantity}
-                onChange={(e) => setQuantity(e.target.value)}
                 min="1"
+                className="w-full border rounded-lg py-2 px-4 mt-2 focus:outline-none focus:ring-2 focus:ring-teal-600"
+                value={formData.quantity}
+                onChange={handleInputChange}
               />
             </div>
-          </div>
-          <div className="text-center">
+          </form>
+
+          <div className="flex justify-between mt-6">
+            <button
+              className="bg-teal-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-teal-700 transition duration-200 flex items-center justify-center"
+              onClick={handleBack}
+            >
+              <FaArrowLeft className="mr-2" />
+              Kembali
+            </button>
+
             <button
               className="bg-teal-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-teal-700 transition duration-200 flex items-center justify-center"
               onClick={handleReturn}
