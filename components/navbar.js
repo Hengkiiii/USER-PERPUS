@@ -17,10 +17,10 @@ function navbar() {
         <input
           type="text"
           placeholder="Cari judul, penulis, atau ISBN..."
-          className="flex-grow p-4 rounded-l-lg text-gray-700 border border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-600"
+          className="flex-grow p-4 rounded-lg text-gray-700 border border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-600"
         />
         <button
-          className="px-6 py-3 bg-teal-500 text-white font-semibold rounded-lg hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600 flex items-center justify-center transition duration-200"
+          className="ml-4 px-6 py-5 bg-teal-500 text-white font-semibold rounded-lg hover:bg-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-600 flex items-center justify-center transition duration-200"
           onClick={handleSearch}
         >
           <FaSearch className="mr-2" />

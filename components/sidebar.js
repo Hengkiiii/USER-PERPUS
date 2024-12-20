@@ -34,13 +34,6 @@ function Page() {
           </button>
           <button
             className="flex items-center space-x-2 w-full text-left cursor-pointer py-2 px-4 rounded-lg hover:bg-teal-500 transition duration-200"
-            onClick={() => handleNavigation("/detailbuku")}
-          >
-            <FaBook size={24} />
-            <span className="text-lg">Detail Buku</span>
-          </button>
-          <button
-            className="flex items-center space-x-2 w-full text-left cursor-pointer py-2 px-4 rounded-lg hover:bg-teal-500 transition duration-200"
             onClick={() => handleNavigation("/peminjamanbuku")}
           >
             <FaCartPlus size={24} />

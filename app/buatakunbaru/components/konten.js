@@ -3,11 +3,20 @@
 import React, { useState } from "react";
 import { Input, Button, Typography } from "@material-tailwind/react";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
+//hooks
+import useLoginPengguna from "@/hooks/useLoginPengguna";
 
 function Konten() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [konfirmasiPassword, setKonfirmasiPassword] = useState("");
+  const [namaLengkap, setNamaLengkap] = useState("");
+  const [prodi, setProdi] = useState("");
   const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const { sedangMemuat, buatAkunBaru } = useLoginPengguna();
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
@@ -19,15 +28,31 @@ function Konten() {
     return emailRegex.test(email);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // Validasi email
     if (!validateEmail(email)) {
       setEmailError("Email harus mengandung '@' dan format yang benar.");
+      return;
     } else {
       setEmailError("");
     }
+
+    // Validasi password
+    if (password !== konfirmasiPassword) {
+      setPasswordError("Kata sandi dan konfirmasi kata sandi tidak cocok.");
+      return;
+    } else {
+      setPasswordError("");
+    }
+
+    // Panggil hook untuk membuat akun baru
+    const dataPengguna = {
+      namaLengkap,
+      prodi,
+    };
+    await buatAkunBaru(email, password, dataPengguna);
   };
 
   return (
@@ -51,6 +76,8 @@ function Konten() {
               type="text"
               label="Nama Lengkap"
               placeholder="Nama Lengkap"
+              value={namaLengkap}
+              onChange={(e) => setNamaLengkap(e.target.value)}
               className="border-gray-300 focus:border-[#00B894] focus:ring-[#00B894]"
             />
             <div className="relative">
@@ -70,6 +97,8 @@ function Konten() {
               type="text"
               label="Prodi"
               placeholder="Prodi"
+              value={prodi}
+              onChange={(e) => setProdi(e.target.value)}
               className="border-gray-300 focus:border-[#00B894] focus:ring-[#00B894]"
             />
 
@@ -78,6 +107,8 @@ function Konten() {
                 type={showPassword ? "text" : "password"}
                 label="Kata Sandi"
                 placeholder="Kata Sandi"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 className="border-gray-300 focus:border-[#00B894] focus:ring-[#00B894]"
               />
               <span
@@ -93,6 +124,8 @@ function Konten() {
                 type={showPassword ? "text" : "password"}
                 label="Konfirmasi Kata Sandi"
                 placeholder="Konfirmasi Kata Sandi"
+                value={konfirmasiPassword}
+                onChange={(e) => setKonfirmasiPassword(e.target.value)}
                 className="border-gray-300 focus:border-[#00B894] focus:ring-[#00B894]"
               />
               <span
@@ -103,11 +136,17 @@ function Konten() {
               </span>
             </div>
 
+            {passwordError && (
+              <p className="text-red-500 text-xs mt-1">{passwordError}</p>
+            )}
+
             <Button
               className="mt-4 bg-[#00B894] hover:bg-[#01996f]"
               color="green"
+              type="submit"
+              disabled={sedangMemuat}
             >
-              MASUK
+              {sedangMemuat ? "Memuat..." : "DAFTAR"}
             </Button>
             <Typography
               variant="small"
@@ -115,7 +154,7 @@ function Konten() {
               className="mt-4 text-center text-[#555555]"
             >
               Sudah Punya Akun?{" "}
-              <a href="/page" className="text-[#00B894] font-bold">
+              <a href="/" className="text-[#00B894] font-bold">
                 Masuk
               </a>
             </Typography>
