@@ -1,35 +1,22 @@
 "use client";
 import React, { useState } from "react";
 import { Input, Button, Typography } from "@material-tailwind/react";
-import { ToastContainer, toast } from 'react-toastify';
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/lib/firebaseConfig"; // Ensure this is connected to your Firebase config
-import { useRouter } from "next/navigation";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useMasukDenganEmailKatasandi from "@/hooks/useMasukDenganEmailKataSandi";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [sedangMemuat, setSedangMemuat] = useState(false);
-  const router = useRouter();
+
+  const { masukDenganEmailKatasandi } = useMasukDenganEmailKatasandi();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setSedangMemuat(true);
-
-    try {
-      // Attempt to sign in with Firebase Authentication
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
-      // If successful, show success toast and redirect
-      toast.success("Berhasil masuk!");
-      router.push("/beranda");
-    } catch (error) {
-      console.error("Login failed:", error);
-      toast.error("Terjadi kesalahan saat masuk. Periksa email dan kata sandi.");
-    } finally {
-      setSedangMemuat(false);
-    }
+    await masukDenganEmailKatasandi(email, password);
+    setSedangMemuat(false);
   };
 
   return (
@@ -71,7 +58,7 @@ export default function LoginPage() {
               type="submit"
               disabled={sedangMemuat}
             >
-              {sedangMemuat ? 'Loading...' : 'MASUK'}
+              {sedangMemuat ? "Loading..." : "MASUK"}
             </Button>
             <Typography
               variant="small"

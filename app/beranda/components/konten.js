@@ -4,34 +4,44 @@ import { CiBookmarkPlus } from "react-icons/ci";
 import { FaBookMedical } from "react-icons/fa";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 import { Dialog, DialogHeader, DialogBody } from "@material-tailwind/react";
+// KOMPONEN
+import ModalPinjamBuku from "@/components/modalPinjamBuku";
 // Hooks
 import useTampilkanDataBuku from "@/hooks/useTampilkanDataBuku";
 import useWishList from "@/hooks/useWishList";
+import usePinjamBuku from "@/hooks/useAmbilPeminjamanBuku";
 
 function Konten() {
-  // Fetch books data using the custom hook
-  const { sedangMemuat, daftarBuku } = useTampilkanDataBuku();
-
-  // State untuk dialog
+  const [modalBuka, setModalBuka] = useState(false);
+  const { sedangMemuat, hasilPencarian } = useTampilkanDataBuku();
   const [bukuDipilih, setBukuDipilih] = useState(null);
-
-  // Wishlist hook
+  const [bukuDipilihUntukModal, setBukuDipilihUntukModal] = useState(null);
   const { tambahkanKeWishlist } = useWishList();
+  const { pinjamBuku } = usePinjamBuku();
 
-  // Fungsi untuk membuka dialog
+  const tutupModal = () => {
+    setModalBuka(false);
+  };
+
+  const bukaModalBuku = (buku) => {
+    setModalBuka(true);
+    setBukuDipilihUntukModal(buku);
+  };
+
   const bukaDialog = (buku) => {
     setBukuDipilih(buku);
   };
 
-  // Fungsi untuk menutup dialog
   const tutupDialog = () => {
     setBukuDipilih(null);
   };
 
-  // Fungsi untuk menambahkan buku ke wishlist
   const handleTambahkanKeWishlist = async (buku) => {
     await tambahkanKeWishlist(buku);
-    alert(`${buku.Nama_Buku} berhasil ditambahkan ke wishlist!`);
+  };
+
+  const handlepinjamBuku = async (buku) => {
+    await pinjamBuku(buku, new Date(), 7, 1);
   };
 
   if (sedangMemuat) {
@@ -47,20 +57,21 @@ function Konten() {
               <th className="w-12 font-semibold text-lg">No</th>
               <th className="w-36 py-3 font-semibold text-lg">Nama Buku</th>
               <th className="w-36 py-3 font-semibold text-lg">Pengarang</th>
+              <th className="w-36 py-3 font-semibold text-lg">Stok</th>
               <th className="w-36 font-semibold text-lg">Tahun Terbit</th>
               <th className="px-6 py-3 font-semibold text-lg">ISBN</th>
               <th className="w-36 font-semibold text-lg">Aksi</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 text-center">
-            {daftarBuku.length === 0 ? (
+            {hasilPencarian.length === 0 ? (
               <tr>
                 <td colSpan="6" className="text-center py-4 text-red-700">
                   Tidak ada buku yang ditemukan.
                 </td>
               </tr>
             ) : (
-              daftarBuku.map((buku, index) => (
+              hasilPencarian.map((buku, index) => (
                 <tr
                   key={index}
                   className="hover:bg-gray-100 transition duration-200"
@@ -68,10 +79,15 @@ function Konten() {
                   <td className="px-6 py-4 text-center">{index + 1}</td>
                   <td className="px-6 py-4">{buku.Nama_Buku}</td>
                   <td className="px-6 py-4">{buku.Pengarang}</td>
+                  <td className="px-6 py-4">{buku.Stok}</td>
                   <td className="px-6 py-4 text-center">{buku.Tahun_Terbit}</td>
                   <td className="w-36 py-4">{buku.ISBN}</td>
                   <td className="w-full py-4 flex items-center justify-center">
-                    <FaBookMedical className="mr-2" size={18} />
+                    <FaBookMedical
+                      className="mr-2 cursor-pointer"
+                      size={18}
+                      onClick={() => bukaModalBuku(buku)}
+                    />
                     <CiBookmarkPlus
                       className="mr-2 cursor-pointer"
                       size={18}
@@ -124,6 +140,12 @@ function Konten() {
           </>
         )}
       </Dialog>
+
+      <ModalPinjamBuku
+        buka={modalBuka}
+        tutup={tutupModal}
+        buku={bukuDipilihUntukModal}
+      />
     </div>
   );
 }

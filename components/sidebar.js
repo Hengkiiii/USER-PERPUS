@@ -2,16 +2,15 @@
 
 import React from "react";
 import { AiOutlineHome, AiOutlineUser, AiOutlineLogout } from "react-icons/ai";
-import {
-  FaBook,
-  FaRegBookmark,
-  FaCartPlus,
-  FaRegHandPaper,
-} from "react-icons/fa";
+import { FaRegBookmark, FaCartPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation";
+// HOOKS
+import useKeluar from "@/hooks/useKeluar";
 
 function Page() {
   const pengarah = useRouter();
+
+  const { keluar } = useKeluar();
 
   const handleNavigation = (page) => {
     console.log(`Navigating to ${page}`);
@@ -29,7 +28,7 @@ function Page() {
             className="flex items-center space-x-2 w-full text-left cursor-pointer py-2 px-4 rounded-lg hover:bg-teal-500 transition duration-200"
             onClick={() => handleNavigation("/beranda")}
           >
-            <AiOutlineHome size={24} />
+            <AiOutlineHome size={20} />
             <span className="text-lg">Beranda</span>
           </button>
           <button
@@ -46,22 +45,18 @@ function Page() {
             <FaRegBookmark size={24} />
             <span className="text-lg">Wishlist</span>
           </button>
-          <button
-            className="flex items-center space-x-2 w-full text-left cursor-pointer py-2 px-4 rounded-lg hover:bg-teal-500 transition duration-200"
-            onClick={() => handleNavigation("/kembalikanbuku")}
-          >
-            <FaRegHandPaper size={24} />
-            <span className="text-lg">Kembalikan Buku</span>
-          </button>
         </div>
         <div className="space-y-4 mt-6">
-          <button className="flex items-center space-x-2 w-full text-left cursor-pointer py-2 px-4 rounded-lg hover:bg-teal-500 transition duration-200">
+          <button
+            className="flex items-center space-x-2 w-full text-left cursor-pointer py-2 px-4 rounded-lg hover:bg-teal-500 transition duration-200"
+            onClick={() => handleNavigation("/profil")}
+          >
             <AiOutlineUser size={24} />
             <span className="text-lg">Akun</span>
           </button>
           <button
             className="flex items-center space-x-2 w-full text-left cursor-pointer py-2 px-4 rounded-lg hover:bg-teal-500 transition duration-200"
-            onClick={() => handleNavigation("/")}
+            onClick={keluar}
           >
             <AiOutlineLogout size={24} />
             <span className="text-lg">Keluar</span>
